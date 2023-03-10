@@ -19,7 +19,7 @@ class PasswordLogger:
 
         self.database_manager.update_password_for_application(application_name=application_name,
                                                               username=username,
-                                                              password=new_password)
+                                                              new_password=new_password)
 
     def update_username(self, application_name: str, username: str, new_username: str) -> None:
 
@@ -52,7 +52,7 @@ class PasswordLogger:
                                                            username=username,
                                                            password=password)
 
-    def delete_item_from_database(self, username: str, application_name: str = None,  for_all_applications: bool = False) -> None:
+    def delete_item_from_database(self, username: str, *, application_name: str = None,  for_all_applications: bool = False) -> None:
 
         """
         General function to either delete a single entry (user per application) or all entries for a specific username for all applications
@@ -64,14 +64,13 @@ class PasswordLogger:
         """
 
         if for_all_applications:
-            self.database_manager.delete_user_for_all_applications(application_name=application_name,
-                                                                   username=username)
+            self.database_manager.delete_user_for_all_applications(username=username)
 
         else:
             self.database_manager.delete_entry_for_application(application_name=application_name,
                                                                username=username)
 
-    def retrieve_information_for_application(self, application_name: str, username: str = None) -> dict[str, dict[str, str]]:
+    def retrieve_information_for_application(self, application_name: str, *, username: str = None) -> dict[str, list[dict[str, str]]]:
 
         """
         Fetches and returns information for a specific application - user combination
@@ -89,7 +88,7 @@ class PasswordLogger:
 
         return self.__reformat_database_fetch(data=data)
 
-    def retrieve_all_information_from_database(self) -> list[tuple[str]]:
+    def retrieve_all_information_from_database(self) -> dict[str, list[dict[str, str]]]:
 
         """
         Fetches and returns total information from the complete database.
@@ -104,7 +103,7 @@ class PasswordLogger:
         return self.__reformat_database_fetch(data=data)
 
     @staticmethod
-    def __reformat_database_fetch(data: list[tuple[str]]) -> dict[str, dict[str, str]]:
+    def __reformat_database_fetch(data: list[tuple[str]]) -> dict[str, list[dict[str, str]]]:
 
         """
         Reformats the fetched data from the database itself into a dictionary format
@@ -113,7 +112,7 @@ class PasswordLogger:
         """
 
         columns = DATABASE_COLUMNS
-        result: dict[str, str] = dict()
+        result: dict[str, list[dict[str, str]]] = dict()  # {Application: [{Username: Peter, Password: test},...], ...}
 
         for tup in data:  # data = [ (str, str, str), ... ]
             application_name = tup[0]
