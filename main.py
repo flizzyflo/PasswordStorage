@@ -9,4 +9,4 @@ if __name__ == '__main__':
                         table_name=DATABASE_TABLE_NAME)
 
     logger = PasswordLogger(d)
-
+    print(logger.retrieve_information_for_application(application_name="Google_1"))

@@ -38,11 +38,11 @@ class DatabaseManager:
 
         self.database_connection.commit()
 
-    def update_username_for_application(self, application_name: str, username: str, password: str) -> None:
+    def update_username_for_application(self, application_name: str, username: str, new_username: str) -> None:
         cursor: sqlite3.Cursor = self.database_connection.cursor()
 
         cursor.execute(f"""UPDATE {self.table_name} 
-                           set USERNAME='{username}' 
+                           set USERNAME='{new_username}' 
                            where APPLICATION_NAME = '{application_name}' 
                            and USERNAME = '{username}'""")
 
@@ -64,8 +64,8 @@ class DatabaseManager:
 
         if username is None:
             data = cursor.execute(f"""SELECT * 
-                                            FROM {self.table_name} 
-                                            where APPLICATION_NAME = '{application_name}'""").fetchall()
+                                    FROM {self.table_name} 
+                                    where APPLICATION_NAME = '{application_name}'""").fetchall()
         else:
             data=cursor.execute(f"""SELECT * 
                                 FROM {self.table_name} 
