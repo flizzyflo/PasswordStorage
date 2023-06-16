@@ -12,9 +12,3 @@ class Password:
 
     def get_password(self) -> str:
         return self.encrypt_password()
-
-    def decrypt_password(self, *, password: str) -> str:
-        return ""
-
-    def encrypt_password(self) -> str:
-        return ""
